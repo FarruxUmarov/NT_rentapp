@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -21,67 +22,59 @@ class BranchApiTest extends TestCase
 
     public function test_index_returns_successful_response()
     {
-        User::factory(3)->create();
+        Branch::factory(3)->create();
 
-        $response = $this->getJson('/api/users');
+        $response = $this->getJson('/api/branches');
 
         $response->assertStatus(200)
-            ->assertJsonCount(4);
+            ->assertJsonCount(3);
     }
 
-    public function test_store_creates_new_user()
+    public function test_store_creates_new_branch()
     {
-        $response = $this->postJson('/api/users', [
+        $response = $this->postJson('/api/branches', [
             "name" => "Bobur",
-            "email" => "bobr@exeasd.com",
-            "password" => "12345678",
-            "phone" => "1234567890",
-            "gender" => "male",
-            "position" => "hello world",
+            "address" => "Bogazici University",
         ]);
         $response->assertStatus(201)
             ->assertJsonFragment(['name' => 'Bobur']);
     }
 
-//    public function test_store_fails_with_invalid_data()
-//    {
-//        $response = $this->postJson('/api/users', [
-//            'name' => '',
-//        ]);
-//        $response->assertStatus(422)
-//            ->assertJsonValidationErrors('name');
-//    }
-
-    public function test_show_returns_user()
+    public function test_store_fails_with_invalid_data()
     {
-
-        $user = User::factory()->create();
-
-        $response = $this->getJson("/api/users/{$user->id}");
-
-        $response->assertStatus(200)
-            ->assertJsonFragment(['name' => $user->name]);
+        $response = $this->postJson('/api/branches', [
+            'name' => '',
+        ]);
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors('name');
     }
 
-    public function test_show_fails_for_nonexistent_user()
+    public function test_show_returns_branch()
     {
-        $response = $this->getJson('/api/users/999');
+
+        $branch = Branch::factory()->create();
+
+        $response = $this->getJson("/api/branches/{$branch->id}");
+
+        $response->assertStatus(200)
+            ->assertJsonFragment(['name' => $branch->name]);
+    }
+
+    public function test_show_fails_for_nonexistent_branch()
+    {
+        $response = $this->getJson('/api/branches/999');
 
         $response->assertStatus(404);
     }
 
-    public function test_update_modifies_existing_user()
+    public function test_update_modifies_existing_branch()
     {
 
-        $user = User::factory()->create();
+        $branch = Branch::factory()->create();
 
-        $response = $this->putJson("/api/users/{$user->id}", [
+        $response = $this->putJson("/api/branches/{$branch->id}", [
             'name' => 'Iskandar',
-            'email' => "iskanda@mail.com",
-            'password' => "12345678",
-            'phone' => "1234567899",
-            'gender' => "male",
-            'position' => "hello"
+            'address' => 'Bogazici University'
         ]);
         $response->assertStatus(200)
             ->assertJsonFragment(['name' => 'Iskandar']);
@@ -89,9 +82,9 @@ class BranchApiTest extends TestCase
 
     public function test_update_fails_with_invalid_data()
     {
-        $user = User::factory()->create();
+        $branch = Branch::factory()->create();
 
-        $response = $this->putJson("/api/users/{$user->id}", [
+        $response = $this->putJson("/api/branches/{$branch->id}", [
             'name' => '',
         ]);
 
@@ -99,19 +92,19 @@ class BranchApiTest extends TestCase
             ->assertJsonValidationErrors('name');
     }
 
-    public function test_destroy_removes_user()
+    public function test_destroy_removes_branch()
     {
-        $user = User::factory()->create();
+        $branch = Branch::factory()->create();
 
-        $response = $this->deleteJson("/api/users/{$user->id}");
+        $response = $this->deleteJson("/api/branches/{$branch->id}");
 
         $response->assertStatus(204);
-        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+        $this->assertDatabaseMissing('branches', ['id' => $branch->id]);
     }
 
-    public function test_destroy_fails_for_nonexistent_user()
+    public function test_destroy_fails_for_nonexistent_branch()
     {
-        $response = $this->deleteJson('/api/users/999');
+        $response = $this->deleteJson('/api/branches/999');
 
         $response->assertStatus(404);
     }

@@ -16,6 +16,10 @@ class StatusController extends Controller
 
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
+        $request->validate([
+            'status' => 'required|string|max:255'
+        ]);
+
         $status = Status::query()->create([
             'status' => $request['status'],
         ]);
@@ -23,7 +27,7 @@ class StatusController extends Controller
         return response()->json([
             'message' => 'Successfully created status!',
             'status' => $status,
-        ]);
+        ], 201);
     }
 
     public function show(string $id): \Illuminate\Http\JsonResponse
@@ -37,9 +41,13 @@ class StatusController extends Controller
 
     public function update(Request $request, string $id): \Illuminate\Http\JsonResponse
     {
+        $request->validate([
+            'status' => 'required|string|max:255'
+        ]);
+
         $status = Status::query()->findOrFail($id);
         $status->update([
-            'status'
+            'status' => $request['status'],
         ]);
 
         return response()->json([
@@ -55,6 +63,6 @@ class StatusController extends Controller
         return response()->json([
             'message' => 'Successfully deleted status!',
             'status' => $status,
-        ]);
+        ], 204);
     }
 }

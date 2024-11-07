@@ -17,6 +17,11 @@ class BranchController extends Controller
 
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+        ]);
+
         $branch = Branch::query()->create([
             'name' => $request['name'],
             'address' => $request['address'],
@@ -26,7 +31,7 @@ class BranchController extends Controller
             'message' => 'Branch created successfully',
             'status' => 'success',
             'branch' => $branch,
-        ]);
+        ], 201);
     }
 
     public function show(string $id): \Illuminate\Http\JsonResponse
@@ -41,6 +46,11 @@ class BranchController extends Controller
 
     public function update(Request $request, string $id): \Illuminate\Http\JsonResponse
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+        ]);
+
         $branch = Branch::query()->findOrFail($id);
         $branch->update([
             'name' => $request['name'],
@@ -62,6 +72,6 @@ class BranchController extends Controller
             'message' => 'Branch deleted successfully',
             'status' => 'success',
             'branch' => $branch,
-        ]);
+        ], 204);
     }
 }
