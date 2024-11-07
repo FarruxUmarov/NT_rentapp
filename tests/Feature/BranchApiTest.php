@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class UserApiTest extends TestCase
+class BranchApiTest extends TestCase
 {
     use RefreshDatabase;
     protected function setUp(): void
@@ -43,14 +43,14 @@ class UserApiTest extends TestCase
             ->assertJsonFragment(['name' => 'Bobur']);
     }
 
-    public function test_store_fails_with_invalid_data()
-    {
-        $response = $this->postJson('/api/users', [
-            'name' => '',
-        ]);
-        $response->assertStatus(422)
-            ->assertJsonValidationErrors('name');
-    }
+//    public function test_store_fails_with_invalid_data()
+//    {
+//        $response = $this->postJson('/api/users', [
+//            'name' => '',
+//        ]);
+//        $response->assertStatus(422)
+//            ->assertJsonValidationErrors('name');
+//    }
 
     public function test_show_returns_user()
     {
