@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pest\PendingCalls;
 
 use Closure;
+use Pest\Concerns\Testable;
 use Pest\Exceptions\InvalidArgumentException;
 use Pest\Exceptions\TestDescriptionMissing;
 use Pest\Factories\Attribute;
@@ -25,9 +26,9 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  *
- * @mixin HigherOrderCallables|TestCase
+ * @mixin HigherOrderCallables|TestCase|Testable
  */
-final class TestCall
+final class TestCall // @phpstan-ignore-line
 {
     use Describable;
 
@@ -75,7 +76,7 @@ final class TestCall
             throw new TestDescriptionMissing($this->filename);
         }
 
-        $description = is_null($this->describing)
+        $description = $this->describing === []
             ? $this->description
             : Str::describe($this->describing, $this->description);
 
@@ -682,7 +683,7 @@ final class TestCall
             throw new TestDescriptionMissing($this->filename);
         }
 
-        if (! is_null($this->describing)) {
+        if ($this->describing !== []) {
             $this->testCaseMethod->describing = $this->describing;
             $this->testCaseMethod->description = Str::describe($this->describing, $this->description);
         } else {

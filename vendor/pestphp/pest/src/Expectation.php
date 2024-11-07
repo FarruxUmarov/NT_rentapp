@@ -223,7 +223,7 @@ final class Expectation
             throw new BadMethodCallException('Expectation value is not iterable.');
         }
 
-        if (count($callbacks) == 0) {
+        if ($callbacks === []) {
             throw new InvalidArgumentException('No sequence expectations defined.');
         }
 
@@ -264,7 +264,7 @@ final class Expectation
         $matched = false;
 
         foreach ($expressions as $key => $callback) {
-            if ($subject != $key) {
+            if ($subject != $key) { // @pest-arch-ignore-line
                 continue;
             }
 
@@ -380,7 +380,7 @@ final class Expectation
         if (self::hasExtend($name)) {
             $extend = self::$extends[$name]->bindTo($this, Expectation::class);
 
-            if ($extend != false) {
+            if ($extend != false) { // @pest-arch-ignore-line
                 return $extend;
             }
         }
@@ -509,9 +509,22 @@ final class Expectation
     {
         return Targeted::make(
             $this,
-            fn (ObjectDescription $object): bool => (bool) preg_match('/^<\?php\s+declare\(.*?strict_types\s?=\s?1.*?\);/', (string) file_get_contents($object->path)),
+            fn (ObjectDescription $object): bool => (bool) preg_match('/^<\?php\s*(\/\*[\s\S]*?\*\/|\/\/[^\r\n]*(?:\r?\n|$)|\s)*declare\s*\(\s*strict_types\s*=\s*1\s*\)\s*;/m', (string) file_get_contents($object->path)),
             'to use strict types',
             FileLineFinder::where(fn (string $line): bool => str_contains($line, '<?php')),
+        );
+    }
+
+    /**
+     * Asserts that the given expectation target uses strict equality.
+     */
+    public function toUseStrictEquality(): ArchExpectation
+    {
+        return Targeted::make(
+            $this,
+            fn (ObjectDescription $object): bool => ! str_contains((string) file_get_contents($object->path), ' == ') && ! str_contains((string) file_get_contents($object->path), ' != '),
+            'to use strict equality',
+            FileLineFinder::where(fn (string $line): bool => str_contains($line, ' == ') || str_contains($line, ' != ')),
         );
     }
 

@@ -27,17 +27,20 @@ final class Laravel extends AbstractPreset
             ->ignoring('App\Enums');
 
         $this->expectations[] = expect('App\Enums')
-            ->toBeEnums();
+            ->toBeEnums()
+            ->ignoring('App\Enums\Concerns');
 
         $this->expectations[] = expect('App\Features')
-            ->toBeClasses();
+            ->toBeClasses()
+            ->ignoring('App\Features\Concerns');
 
         $this->expectations[] = expect('App\Features')
             ->toHaveMethod('resolve');
 
         $this->expectations[] = expect('App\Exceptions')
             ->classes()
-            ->toImplement('Throwable');
+            ->toImplement('Throwable')
+            ->ignoring('App\Exceptions\Handler');
 
         $this->expectations[] = expect('App')
             ->not->toImplement(Throwable::class)
@@ -149,7 +152,7 @@ final class Laravel extends AbstractPreset
             ->toOnlyBeUsedIn('App\Http');
 
         $this->expectations[] = expect('App\Http\Controllers')
-            ->not->toHavePublicMethodsBesides(['__construct', '__invoke', 'index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
+            ->not->toHavePublicMethodsBesides(['__construct', '__invoke', 'index', 'show', 'create', 'store', 'edit', 'update', 'destroy', 'middleware']);
 
         $this->expectations[] = expect([
             'dd',
@@ -159,5 +162,9 @@ final class Laravel extends AbstractPreset
             'exit',
             'ray',
         ])->not->toBeUsed();
+
+        $this->expectations[] = expect('App\Policies')
+            ->classes()
+            ->toHaveSuffix('Policy');
     }
 }
