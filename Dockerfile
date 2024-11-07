@@ -22,6 +22,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . /var/www
 RUN composer install
+RUN composer update
 
 RUN chown -R www-data:www-data /var/www
 RUN chmod -R 755 /var/www
