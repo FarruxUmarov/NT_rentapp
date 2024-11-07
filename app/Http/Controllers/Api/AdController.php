@@ -16,6 +16,19 @@ class AdController extends Controller
 
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'rooms' => 'required|integer|min:1',
+            'square' => 'required|numeric|min:1',
+            'description' => 'nullable|string',
+            'user_id' => 'required|exists:users,id',
+            'branch_id' => 'required|exists:branches,id',
+            'status_id' => 'required|exists:statuses,id',
+            'gender' => 'required|in:male,female',
+        ]);
+
         $ad = Ad::query()->create([
             'title' => $request['title'],
             'address' => $request['address'],
@@ -33,12 +46,9 @@ class AdController extends Controller
             'message' => 'Ad created successfully.',
             'status' => 'success',
             'user' => $ad
-        ]);
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id): \Illuminate\Http\JsonResponse
     {
         $ad = Ad::query()->findOrFail($id);
@@ -52,6 +62,19 @@ class AdController extends Controller
 
     public function update(Request $request, string $id): \Illuminate\Http\JsonResponse
     {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'rooms' => 'required|integer|min:1',
+            'square' => 'required|numeric|min:1',
+            'description' => 'nullable|string',
+            'user_id' => 'required|exists:users,id',
+            'branch_id' => 'required|exists:branches,id',
+            'status_id' => 'required|exists:statuses,id',
+            'gender' => 'required|in:male,female',
+        ]);
+
         $ad = Ad::query()->findOrFail($id);
         $ad->update([
             'title' => $request['title'],
@@ -81,6 +104,6 @@ class AdController extends Controller
             'message' => 'Ad created successfully.',
             'status' => 'success',
             'user' => $ad
-        ]);
+        ], 204);
     }
 }

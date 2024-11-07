@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('ads', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('address');
-            $table->float('price');
-            $table->integer('rooms');
-            $table->float('square');
-            $table->text('description');
+            $table->string('title')->nullable();
+            $table->string('address')->nullable();
+            $table->float('price')->nullable();
+            $table->integer('rooms')->nullable();
+            $table->float('square')->nullable();
+            $table->text('description')->nullable();
             $table->foreignId('user_id')->constrained('users', 'id')->cascadeOnDelete();
             $table->foreignId('branch_id')->constrained('branches', 'id')->cascadeOnDelete();
             $table->foreignId('status_id')->constrained('statuses', 'id')->cascadeOnDelete();
