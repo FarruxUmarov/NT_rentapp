@@ -590,9 +590,9 @@
             ),
         ),
         'myclabs/deep-copy' => array(
-            'pretty_version' => '1.12.0',
-            'version' => '1.12.0.0',
-            'reference' => '3a6b9a42cd8f8771bd4295d13e1423fa7f3d942c',
+            'pretty_version' => '1.12.1',
+            'version' => '1.12.1.0',
+            'reference' => '123267b2c49fbf30d78a7b2d333f6be754b94845',
             'type' => 'library',
             'install_path' => __DIR__ . '/../myclabs/deep-copy',
             'aliases' => array(),
@@ -925,8 +925,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '3.0.0',
-                1 => '1.0|2.0|3.0',
+                0 => '1.0|2.0|3.0',
+                1 => '3.0.0',
             ),
         ),
         'psr/simple-cache' => array(
